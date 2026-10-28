@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+/* HiveConcerts brand tokens (shared with the pre-launch page in landing/). */
+:root {
+  --paper: #ecebf3;
+  --surface: #ffffff;
+  --ink: #1d1838;
+  --muted: #5b5675;
+  --line: #cfcbdf;
+  --honey: #f0a400;
+  --honey-ink: #3a2700;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #15122b;
+    --surface: #1f1b3b;
+    --ink: #ecebf3;
+    --muted: #a7a2c2;
+    --line: #36315a;
+    --honey: #ffb81c;
+    --honey-ink: #2a1c00;
+  }
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-honey: var(--honey);
+  --color-honey-ink: var(--honey-ink);
+  --font-display: var(--font-display), "Arial Narrow", Impact, sans-serif;
+  --font-sans: var(--font-body), "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+}

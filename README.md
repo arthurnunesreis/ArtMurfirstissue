@@ -15,9 +15,31 @@ Music (artists and bands) leads. Phase 1 builds concerts, orchestral performance
 | `docs/OPEN-QUESTIONS.md` | Product decisions still needed |
 | `prisma/schema.prisma` | Database schema, the source of truth for data shapes |
 | `landing/` | The pre-launch page for hiveconcerts.com (Cloudflare Pages), deployed separately |
-| `scripts/setup-github.sh` | Creates the labels, milestones and Phase 1 issues |
+| `scripts/setup-github.sh` | Creates the labels, milestones and Phase 1 issues (`scripts/setup-github.sh owner/repo`) |
 
-The Next.js app lives at the repository root once Phase 1 task 1 is merged.
+The Next.js app lives at the repository root.
+
+## Local setup
+
+Needs Node 22+, pnpm 10 (`corepack enable`), and PostgreSQL 16+ (local, Docker, or a free Neon database).
+
+```bash
+pnpm install
+cp .env.example .env          # Windows PowerShell: Copy-Item .env.example .env   — then set DATABASE_URL
+pnpm db:init                  # first time only: creates and applies the migrations, then commit prisma/migrations/
+pnpm dev                      # http://localhost:3000
+```
+
+| Command | Does |
+|---|---|
+| `pnpm dev` | Run the app locally |
+| `pnpm typecheck` / `pnpm lint` / `pnpm test` | The checks CI runs |
+| `pnpm test:e2e` | Playwright tests on phone and desktop (first run: `pnpm exec playwright install chromium`) |
+| `pnpm format` | Format code with Prettier |
+| `pnpm db:migrate` | Create and apply a migration after changing `prisma/schema.prisma` |
+| `pnpm db:studio` | Browse the database |
+
+Add UI components with `pnpm dlx shadcn@latest add <component>`.
 
 ## How we work
 

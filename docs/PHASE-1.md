@@ -10,7 +10,7 @@ Work in order. Each task: meet every acceptance criterion, add tests, tick the b
 
 ---
 
-### - [ ] 1. Scaffold the project
+### - [x] 1. Scaffold the project
 - Next.js (App Router, TypeScript strict, `src/` dir), pnpm, Tailwind, shadcn/ui, ESLint + Prettier.
 - Prisma 7+: copy `prisma/schema.prisma` in as-is, add `prisma.config.ts` reading `DATABASE_URL`, and create the client with `@prisma/adapter-pg`. First migration, plus a raw SQL migration for the partial unique index noted on `Suggestion`.
 - Enabled-formats config: `src/config/formats.ts` lists the `ShowFormat` and `PerformerKind` values switched on (`CONCERT`, `ORCHESTRAL`, `THEATRE` and the six Phase 1 kinds). Every form, filter and validator reads from it; nothing else hard-codes the list.
