@@ -1,0 +1,8 @@
+name = "hiveconcerts-landing"
+compatibility_date = "2026-09-01"
+pages_build_output_dir = "public"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "hiveconcerts-signups"
+database_id = "REPLACE_WITH_ID_FROM_wrangler_d1_create"

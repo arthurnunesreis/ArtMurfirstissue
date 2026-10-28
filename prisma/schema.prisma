@@ -1,0 +1,528 @@
+// HiveConcerts — starter schema (Phase 1, with future-phase hooks)
+// Money: BigInt minor units + ISO 4217 currency. Never Float/Decimal.
+// Scope: any performing entity, any format. Phase 1 builds music, orchestral and theatre;
+// later formats (dance, comedy, exhibition matches, competitions, bespoke) are enum values only.
+
+// Prisma 7+: the connection URL lives in prisma.config.ts, and PrismaClient uses the pg driver adapter.
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ───────────── Enums ─────────────
+
+enum Role {
+  USER
+  ADMIN
+}
+
+/// Who someone is on HiveConcerts. Self-declared in Phase 1, verified from Phase 2.
+enum Stakeholder {
+  FAN
+  PERFORMER // the act itself or its management
+  ORGANIZER // promoter / event organiser
+  SPONSOR
+  PROVIDER  // venue, sound, staging, security, ticketing…
+}
+
+/// The kind of event a Suggestion proposes.
+enum ShowFormat {
+  CONCERT          // Phase 1
+  ORCHESTRAL       // Phase 1
+  THEATRE          // Phase 1
+  DANCE            // later
+  COMEDY           // later
+  EXHIBITION_MATCH // later — one-off contests (e.g. boxing exhibitions); needs a compliance gate
+  COMPETITION      // later — rivalry / battle formats
+  BESPOKE          // later — custom performances
+}
+
+enum PerformerKind {
+  SOLO_ARTIST     // Phase 1
+  BAND            // Phase 1
+  ORCHESTRA       // Phase 1
+  ENSEMBLE        // Phase 1 — choirs, chamber groups, crews
+  THEATRE_COMPANY // Phase 1
+  PRODUCTION      // Phase 1 — a named show (a play or musical) rather than the company
+  DANCE_COMPANY   // later
+  COMEDIAN        // later
+  ATHLETE         // later
+  TEAM            // later
+  OTHER
+}
+
+enum PerformerStatus {
+  UNCLAIMED // created by fans
+  CLAIMED   // Phase 2
+  VERIFIED  // Phase 2
+}
+
+/// A performer's place on a Suggestion's bill.
+enum Billing {
+  HEADLINER
+  CO_HEADLINER
+  SUPPORT
+  GUEST
+  OPPONENT // head-to-head formats (later)
+}
+
+/// What the performer has said about this Suggestion. Phase 1: always NOT_ASKED.
+enum PerformerResponse {
+  NOT_ASKED
+  INTERESTED
+  CONFIRMED
+  DECLINED
+}
+
+enum SuggestionStatus {
+  DRAFT
+  OPEN
+  THRESHOLD_MET
+  BOOKING   // Phase 3+
+  CONFIRMED // Phase 3+
+  EXPIRED
+  CANCELLED
+}
+
+enum PledgeType {
+  FAN
+  SPONSOR // Phase 3
+}
+
+enum PledgeStatus {
+  ACTIVE
+  WITHDRAWN
+  CONVERTED // Phase 3+ (became a real payment/ticket)
+  RELEASED  // Suggestion expired or cancelled
+}
+
+enum ParticipationStatus {
+  SUBMITTED
+  ACCEPTED  // Phase 2+
+  DECLINED  // Phase 2+
+  WITHDRAWN
+}
+
+enum ThresholdSource {
+  SYSTEM
+  ADMIN
+  PERFORMER // Phase 2
+  ORGANIZER // Phase 2
+}
+
+enum OfferStatus {
+  ACTIVE
+  PAUSED
+  CLOSED
+}
+
+enum FollowTarget {
+  PERFORMER
+  REGION
+  ORGANISATION // Phase 2
+}
+
+enum MediaKind {
+  IMAGE
+  EMBED
+  VIDEO // Phase 2+ (Mux)
+}
+
+// ───────────── Auth.js models ─────────────
+
+model User {
+  id                String        @id @default(cuid())
+  name              String?
+  email             String        @unique
+  emailVerified     DateTime?
+  image             String?
+  role              Role          @default(USER)
+  stakeholderRoles  Stakeholder[] @default([FAN]) // self-declared; a person can be several
+  homeRegionId      String?
+  homeRegion        Region?       @relation(fields: [homeRegionId], references: [id])
+  preferredCurrency String        @default("USD") // ISO 4217, display only
+  locale            String        @default("en")
+  referralCode      String        @unique @default(cuid()) // used in share links (?r=)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  accounts          Account[]
+  sessions          Session[]
+  suggestions       Suggestion[]    @relation("SuggestionCreator")
+  pledges           Pledge[]        @relation("PledgeUser")
+  referredPledges   Pledge[]        @relation("PledgeReferrer")
+  participations    Participation[]
+  uploadedMedia     Media[]
+  claimedPerformers Performer[]     @relation("PerformerClaimant")
+  createdPerformers Performer[]     @relation("PerformerCreator")
+  shareEvents       ShareEvent[]
+  follows           Follow[]
+  auditLogs         AuditLog[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ───────────── Core domain ─────────────
+
+model Region {
+  id              String   @id @default(cuid())
+  slug            String   @unique // e.g. "london-gb", "new-york-us"
+  name            String // "London"
+  countryCode     String // ISO 3166-1 alpha-2
+  timezone        String // IANA, e.g. "Europe/London"
+  latitude        Float?
+  longitude       Float?
+  defaultCurrency String   @default("USD")
+  active          Boolean  @default(true)
+  createdAt       DateTime @default(now())
+
+  suggestions Suggestion[]
+  users       User[]
+  offers      OfferRegion[]
+
+  @@index([countryCode])
+}
+
+/// Genre taxonomy is data, not an enum, so it can grow without migrations.
+/// Top level is grouped by ShowFormat; `parentId` allows sub-genres (e.g. Jazz → Afro-jazz).
+model Genre {
+  id       String     @id @default(cuid())
+  slug     String     @unique
+  name     String
+  format   ShowFormat
+  parentId String?
+  parent   Genre?     @relation("GenreTree", fields: [parentId], references: [id])
+  children Genre[]    @relation("GenreTree")
+
+  performers  PerformerGenre[]
+  suggestions SuggestionGenre[]
+
+  @@index([format])
+}
+
+/// Any performing entity: a solo artist, band, orchestra, ensemble, theatre company or production.
+/// In UI copy, music performers can be called "artists"; the model name stays Performer.
+model Performer {
+  id            String          @id @default(cuid())
+  slug          String          @unique
+  name          String
+  kind          PerformerKind
+  bio           String?         @db.Text
+  countryCode   String? // home country, ISO 3166-1 alpha-2
+  status        PerformerStatus @default(UNCLAIMED)
+  externalLinks Json? // { spotify, instagram, tiktok, youtube, website, ... }
+  hidden        Boolean         @default(false) // moderation
+  createdById   String?
+  createdBy     User?           @relation("PerformerCreator", fields: [createdById], references: [id])
+  claimedById   String? // Phase 2
+  claimedBy     User?           @relation("PerformerClaimant", fields: [claimedById], references: [id])
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  genres      PerformerGenre[]
+  suggestions SuggestionPerformer[]
+  offers      Offer[]
+  media       Media[]
+
+  @@index([name])
+  @@index([kind])
+}
+
+model PerformerGenre {
+  performerId String
+  performer   Performer @relation(fields: [performerId], references: [id], onDelete: Cascade)
+  genreId     String
+  genre       Genre     @relation(fields: [genreId], references: [id])
+
+  @@id([performerId, genreId])
+}
+
+/// The single unit of demand: "this show, in this place". Any stakeholder can propose one.
+model Suggestion {
+  id     String           @id @default(cuid())
+  slug   String           @unique
+  format ShowFormat
+  status SuggestionStatus @default(OPEN)
+
+  /// Who proposed it, in what capacity. Self-declared in Phase 1.
+  origin         Stakeholder @default(FAN)
+  originVerified Boolean     @default(false)
+
+  /// Optional custom title for multi-performer or special shows ("A with the B Symphony").
+  /// When null, UI renders "Bring {headliner} to {region}".
+  title String?
+
+  regionId String
+  region   Region @relation(fields: [regionId], references: [id])
+
+  createdById String
+  createdBy   User   @relation("SuggestionCreator", fields: [createdById], references: [id])
+
+  offerId String? // set when proposed from a performer's Offer (Phase 2)
+  offer   Offer?  @relation(fields: [offerId], references: [id])
+
+  pitch    String? @db.Text // why this show, why this place
+  currency String  @default("USD") // ISO 4217; all pledges + threshold use this
+
+  /// Dedupe key: sha256(format + regionId + sorted performer ids). Computed in app code.
+  /// One active Suggestion per key — see raw SQL index below.
+  matchKey String
+
+  // Denormalised caches of ACTIVE fan/sponsor pledges — updated in the same transaction as pledge writes
+  pledgeTotalMinor BigInt @default(0)
+  pledgeCount      Int    @default(0)
+  shareCount       Int    @default(0)
+
+  thresholdMetAt DateTime?
+  expiresAt      DateTime?
+  hidden         Boolean   @default(false) // moderation
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  performers     SuggestionPerformer[]
+  genres         SuggestionGenre[]
+  threshold      Threshold?
+  pledges        Pledge[]
+  participations Participation[]
+  media          Media[]
+  shareEvents    ShareEvent[]
+
+  @@index([regionId, status])
+  @@index([format, status])
+  @@index([status, pledgeTotalMinor])
+  @@index([matchKey])
+  // Raw SQL migration — one active Suggestion per matchKey:
+  // CREATE UNIQUE INDEX suggestion_active_match
+  //   ON "Suggestion" ("matchKey")
+  //   WHERE status IN ('DRAFT','OPEN','THRESHOLD_MET','BOOKING');
+}
+
+/// The bill: one or more performers on a Suggestion.
+model SuggestionPerformer {
+  suggestionId String
+  suggestion   Suggestion        @relation(fields: [suggestionId], references: [id], onDelete: Cascade)
+  performerId  String
+  performer    Performer         @relation(fields: [performerId], references: [id])
+  billing      Billing           @default(HEADLINER)
+  response     PerformerResponse @default(NOT_ASKED)
+  sortOrder    Int               @default(0)
+
+  @@id([suggestionId, performerId])
+  @@index([performerId])
+}
+
+model SuggestionGenre {
+  suggestionId String
+  suggestion   Suggestion @relation(fields: [suggestionId], references: [id], onDelete: Cascade)
+  genreId      String
+  genre        Genre      @relation(fields: [genreId], references: [id])
+
+  @@id([suggestionId, genreId])
+}
+
+model Threshold {
+  id                String          @id @default(cuid())
+  suggestionId      String          @unique
+  suggestion        Suggestion      @relation(fields: [suggestionId], references: [id], onDelete: Cascade)
+  targetAmountMinor BigInt
+  currency          String // must equal Suggestion.currency
+  minPledgers       Int?
+  deadline          DateTime?
+  source            ThresholdSource @default(SYSTEM)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+}
+
+/// Money commitment toward a Suggestion. Soft (no payment) in Phase 1.
+model Pledge {
+  id           String       @id @default(cuid())
+  type         PledgeType   @default(FAN)
+  status       PledgeStatus @default(ACTIVE)
+  suggestionId String
+  suggestion   Suggestion   @relation(fields: [suggestionId], references: [id])
+  userId       String
+  user         User         @relation("PledgeUser", fields: [userId], references: [id])
+  amountMinor  BigInt
+  currency     String // must equal Suggestion.currency
+  message      String? // optional public note
+  isAnonymous  Boolean      @default(false)
+
+  // Attribution — which share brought this pledge in
+  referrerId String?
+  referrer   User?   @relation("PledgeReferrer", fields: [referrerId], references: [id])
+  source     String? // utm_source / platform, e.g. "whatsapp", "instagram", "tiktok"
+
+  // Sponsor fields — Phase 3, unused in Phase 1
+  sponsorName  String?
+  sponsorTerms Json?
+
+  // Payment linkage — Phase 3+, unused in Phase 1
+  paymentProvider    String?
+  paymentProviderRef String?
+
+  withdrawnAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([userId, suggestionId, type])
+  @@index([suggestionId, status])
+  @@index([referrerId])
+}
+
+/// Non-money participation: "I'm the performer and I'm interested", "I'd organise this",
+/// "my venue could host it", "we'd sponsor". Phase 1 records it; Phase 2+ acts on it.
+model Participation {
+  id           String              @id @default(cuid())
+  suggestionId String
+  suggestion   Suggestion          @relation(fields: [suggestionId], references: [id])
+  userId       String
+  user         User                @relation(fields: [userId], references: [id])
+  as           Stakeholder // PERFORMER | ORGANIZER | SPONSOR | PROVIDER (not FAN — fans pledge)
+  note         String?             @db.Text
+  organisation String? // company / act / venue name
+  status       ParticipationStatus @default(SUBMITTED)
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+
+  @@unique([userId, suggestionId, as])
+  @@index([suggestionId, as])
+}
+
+/// Performer availability (Phase 2): base price, regions, dates, conditions.
+model Offer {
+  id             String       @id @default(cuid())
+  performerId    String
+  performer      Performer    @relation(fields: [performerId], references: [id])
+  formats        ShowFormat[]
+  basePriceMinor BigInt
+  currency       String
+  availableFrom  DateTime?
+  availableTo    DateTime?
+  conditions     String?      @db.Text
+  status         OfferStatus  @default(ACTIVE)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  regions     OfferRegion[]
+  suggestions Suggestion[]
+}
+
+model OfferRegion {
+  offerId  String
+  offer    Offer  @relation(fields: [offerId], references: [id], onDelete: Cascade)
+  regionId String
+  region   Region @relation(fields: [regionId], references: [id])
+
+  @@id([offerId, regionId])
+}
+
+model Media {
+  id           String    @id @default(cuid())
+  kind         MediaKind
+  // IMAGE / VIDEO
+  storageKey   String? // R2 object key
+  width        Int?
+  height       Int?
+  // EMBED
+  provider     String? // youtube | spotify | applemusic | audiomack | soundcloud | vimeo | tiktok
+  providerId   String?
+  sourceUrl    String?
+  title        String?
+  thumbnailUrl String?
+
+  performerId  String?
+  performer    Performer?  @relation(fields: [performerId], references: [id])
+  suggestionId String?
+  suggestion   Suggestion? @relation(fields: [suggestionId], references: [id])
+  uploadedById String
+  uploadedBy   User        @relation(fields: [uploadedById], references: [id])
+  sortOrder    Int         @default(0)
+  hidden       Boolean     @default(false)
+  createdAt    DateTime    @default(now())
+
+  @@index([performerId])
+  @@index([suggestionId])
+}
+
+/// A share action (button tap or share-image download) — feeds shareCount and per-platform stats.
+model ShareEvent {
+  id           String     @id @default(cuid())
+  suggestionId String
+  suggestion   Suggestion @relation(fields: [suggestionId], references: [id], onDelete: Cascade)
+  userId       String?
+  user         User?      @relation(fields: [userId], references: [id])
+  platform     String // whatsapp | facebook | x | telegram | instagram | tiktok | linkedin | reddit | email | sms | native | copy | embed
+  createdAt    DateTime   @default(now())
+
+  @@index([suggestionId, platform])
+}
+
+/// A fan following a performer or a region (organisations in Phase 2). Polymorphic by targetType.
+model Follow {
+  userId     String
+  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  targetType FollowTarget
+  targetId   String
+  createdAt  DateTime     @default(now())
+
+  @@id([userId, targetType, targetId])
+  @@index([targetType, targetId])
+}
+
+model FxRate {
+  base      String // ISO 4217
+  quote     String // ISO 4217
+  rate      Float // display-only conversion; never used for stored amounts
+  fetchedAt DateTime @default(now())
+
+  @@id([base, quote])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String
+  actor      User     @relation(fields: [actorId], references: [id])
+  action     String // e.g. "suggestion.hide", "threshold.update"
+  entityType String
+  entityId   String
+  data       Json?
+  createdAt  DateTime @default(now())
+
+  @@index([entityType, entityId])
+}

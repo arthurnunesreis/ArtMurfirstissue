@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Your favourite band, an orchestra, a stage show. Tell us who you want to see live and where, and back the shows you want.">
+<meta property="og:title" content="HiveConcerts: bring the show to your city">
+<meta property="og:description" content="Name who you want to see live and the city. When enough people back the same show, we make the case to bring it.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://hiveconcerts.com/">
+<meta property="og:image" content="https://hiveconcerts.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="HiveConcerts: bring the show to your city">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://hiveconcerts.com/og.png">
+<meta name="theme-color" content="#1D1838">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Cpath d='M14 2 24.4 8v12L14 26 3.6 20V8Z' fill='%23F0A400'/%3E%3Cpath d='M14 9.5 18 11.8v4.4L14 18.5l-4-2.3v-4.4Z' fill='%231D1838'/%3E%3C/svg%3E">
+<title>HiveConcerts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+/* Layout: left-aligned gig-poster hero; the fill-in sentence form IS the hero, with a live Suggestion stub beside it; then a 4-step sequence, then who-it's-for. */
+:root {
+  --paper: #ECEBF3;      /* cool stage-paper, violet-biased neutral */
+  --surface: #FFFFFF;
+  --ink: #1D1838;        /* deep indigo, not black */
+  --muted: #5B5675;
+  --line: #CFCBDF;
+  --honey: #F0A400;      /* the one accent: hive / progress */
+  --honey-ink: #3A2700;  /* text on honey */
+  --honey-soft: #F7DFA3;
+  --cell-empty: #DCD9E8;
+  --focus: #6B4EFF;
+  --error: #B3261E;
+  --font-display: "Big Shoulders Display", "Arial Narrow", "Roboto Condensed", Impact, sans-serif;
+  --font-body: "Atkinson Hyperlegible", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --step--1: 0.875rem; --step-0: 1.0625rem; --step-1: 1.3rem; --step-2: 1.9rem; --step-3: 2.8rem; --step-4: clamp(3.4rem, 9vw, 6.6rem);
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #15122B; --surface: #1F1B3B; --ink: #ECEBF3; --muted: #A7A2C2; --line: #36315A;
+  --honey: #FFB81C; --honey-ink: #2A1C00; --honey-soft: #4A3912; --cell-empty: #2D2851; --focus: #9F8BFF; --error: #FF8A80; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --paper: #15122B; --surface: #1F1B3B; --ink: #ECEBF3; --muted: #A7A2C2; --line: #36315A;
+  --honey: #FFB81C; --honey-ink: #2A1C00; --honey-soft: #4A3912; --cell-empty: #2D2851; --focus: #9F8BFF; --error: #FF8A80; color-scheme: dark }
+
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font-family: var(--font-body); font-size: var(--step-0); line-height: 1.55; margin: 0; }
+.wrap { max-width: 72rem; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+/* Header */
+.top { padding-block: 1.25rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.brand { display: flex; align-items: center; gap: .55rem; font-family: var(--font-display); font-weight: 800; font-size: 1.6rem; letter-spacing: .01em; text-decoration: none; }
+.brand svg { width: 28px; height: 28px; flex: none; }
+.top a.skip { font-size: var(--step--1); color: var(--muted); }
+
+/* Hero */
+.hero { padding-block: 1.5rem 3.5rem; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: clamp(2rem, 5vw, 4.5rem); align-items: start; }
+@media (max-width: 860px) { .hero { grid-template-columns: minmax(0, 1fr); } }
+h1 { font-family: var(--font-display); font-weight: 900; font-size: var(--step-4); line-height: .9; letter-spacing: -.005em; margin: 0 0 1.25rem; text-wrap: balance; text-transform: uppercase; }
+.lede { font-size: var(--step-1); max-width: 34ch; color: var(--muted); margin: 0 0 2rem; }
+
+/* Fill-in sentence form */
+form.vote { display: grid; gap: 1.1rem; max-width: 36rem; }
+.sentence { font-family: var(--font-display); font-weight: 600; font-size: var(--step-2); line-height: 1.35; margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: .3rem .55rem; }
+.blank { font: inherit; color: var(--ink); background: transparent; border: 0; border-bottom: 3px solid var(--honey); padding: 0 .1rem .05rem; min-width: 0; width: 11ch; border-radius: 0; }
+.blank::placeholder { color: var(--muted); opacity: .7; }
+.blank:focus { outline: none; background: var(--honey-soft); }
+.blank:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.blank.wide { width: 13ch; }
+.row { display: flex; flex-wrap: wrap; gap: .75rem; align-items: stretch; }
+.field { display: grid; gap: .3rem; flex: 1 1 16rem; min-width: 0; }
+label.small, legend.small { font-size: var(--step--1); color: var(--muted); font-weight: 700; }
+input[type=email] { font: inherit; padding: .8rem .9rem; border: 1.5px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 6px; width: 100%; }
+button.go { font-family: var(--font-display); font-weight: 800; font-size: 1.35rem; letter-spacing: .02em; text-transform: uppercase; background: var(--honey); color: var(--honey-ink); border: 0; border-radius: 6px; padding: .75rem 1.5rem; cursor: pointer; align-self: end; transition: transform .12s ease; }
+button.go:hover { transform: translateY(-1px); }
+button.go:active { transform: translateY(1px); }
+button.go[disabled] { opacity: .6; cursor: progress; }
+fieldset.roles { border: 0; margin: 0; padding: 0; display: grid; gap: .4rem; }
+.chips { display: flex; flex-wrap: wrap; gap: .4rem; }
+.chips input { position: absolute; opacity: 0; pointer-events: none; }
+.chips label { padding: .4rem .85rem; border: 1.5px solid var(--line); border-radius: 999px; cursor: pointer; font-size: var(--step--1); background: var(--surface); }
+.chips input:checked + label { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.chips input:focus-visible + label { outline: 3px solid var(--focus); outline-offset: 2px; }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.note { font-size: var(--step--1); color: var(--muted); margin: 0; }
+.status { font-size: var(--step-0); margin: 0; min-height: 1.5em; }
+.status.err { color: var(--error); }
+.status.ok { font-weight: 700; }
+
+/* Suggestion stub (the bold element) */
+.stub { background: var(--surface); border-radius: 14px; padding: 1.5rem 1.5rem 1.25rem; position: relative; box-shadow: 0 1px 0 var(--line), 0 18px 40px -24px rgba(29,24,56,.45); }
+.stub::before, .stub::after { content: ""; position: absolute; top: 64%; width: 26px; height: 26px; border-radius: 50%; background: var(--paper); }
+.stub::before { left: -13px; } .stub::after { right: -13px; }
+.stub .kind { font-size: var(--step--1); color: var(--muted); margin: 0 0 .5rem; }
+.stub h2 { font-family: var(--font-display); font-weight: 900; text-transform: uppercase; font-size: var(--step-3); line-height: .95; margin: 0 0 1.25rem; overflow-wrap: anywhere; text-wrap: balance; }
+.stub h2 span { color: var(--honey); }
+.comb { width: 100%; height: auto; display: block; margin-bottom: .9rem; }
+.comb .cell { fill: var(--cell-empty); transition: fill .35s ease; }
+.comb .cell.on { fill: var(--honey); }
+.figures { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .5rem; font-variant-numeric: tabular-nums; }
+.figures div { display: grid; }
+.figures b { font-family: var(--font-display); font-size: 1.7rem; font-weight: 800; line-height: 1.1; }
+.figures small { color: var(--muted); font-size: .8rem; }
+.perf { border-top: 2px dashed var(--line); margin: 1.25rem -1.5rem 0; padding: .9rem 1.5rem 0; font-size: var(--step--1); color: var(--muted); }
+
+/* Sections */
+section.band { padding-block: 3.5rem; border-top: 1px solid var(--line); }
+h3.sec { font-family: var(--font-display); font-weight: 800; font-size: var(--step-3); line-height: 1; text-transform: uppercase; margin: 0 0 2rem; text-wrap: balance; }
+ol.steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.5rem; counter-reset: s; }
+@media (max-width: 860px) { ol.steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 480px) { ol.steps { grid-template-columns: minmax(0, 1fr); } }
+ol.steps li { counter-increment: s; display: grid; gap: .4rem; align-content: start; }
+ol.steps li::before { content: counter(s); font-family: var(--font-display); font-weight: 900; font-size: 3rem; line-height: 1; color: var(--honey); }
+ol.steps h4 { font-size: var(--step-1); margin: 0; }
+ol.steps p { margin: 0; color: var(--muted); }
+
+.who { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2rem; }
+@media (max-width: 1040px) { .who { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 860px) { .who { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; } }
+.who h4 { font-family: var(--font-display); font-weight: 800; font-size: var(--step-2); text-transform: uppercase; margin: 0 0 .4rem; line-height: 1; }
+.who p { margin: 0; color: var(--muted); max-width: 40ch; }
+
+footer { padding-block: 2.5rem 3rem; border-top: 1px solid var(--line); font-size: var(--step--1); color: var(--muted); display: flex; flex-wrap: wrap; gap: .5rem 2rem; justify-content: space-between; }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="#top" aria-label="HiveConcerts home">
+      <svg viewBox="0 0 28 28" aria-hidden="true"><path d="M14 2 24.4 8v12L14 26 3.6 20V8Z" fill="var(--honey)"/><path d="M14 9.5 18 11.8v4.4L14 18.5l-4-2.3v-4.4Z" fill="var(--ink)"/></svg>
+      HiveConcerts
+    </a>
+    <a class="skip" href="#how">How it works</a>
+  </header>
+
+  <main id="top">
+    <div class="hero">
+      <div>
+        <h1>Bring the show to your city</h1>
+        <p class="lede">Your favourite band, a full orchestra, a stage show. Tell us who you want to see live and where. When enough people back the same show, we take that demand to the people who can make it happen.</p>
+
+        <form class="vote" id="vote" novalidate>
+          <p class="sentence" id="sentence-label">
+            <span>I want to see</span>
+            <input class="blank wide" id="artist" name="artist" type="text" placeholder="artist or show" autocomplete="off" maxlength="80" required aria-label="Artist, band, orchestra or show">
+            <span>live in</span>
+            <input class="blank" id="city" name="city" type="text" placeholder="city" autocomplete="address-level2" maxlength="80" required aria-label="City">
+          </p>
+
+          <fieldset class="roles">
+            <legend class="small">Kind of show</legend>
+            <div class="chips">
+              <input type="radio" name="format" id="fmt-concert" value="concert" checked><label for="fmt-concert">Music</label>
+              <input type="radio" name="format" id="fmt-orchestral" value="orchestral"><label for="fmt-orchestral">Orchestra</label>
+              <input type="radio" name="format" id="fmt-theatre" value="theatre"><label for="fmt-theatre">Theatre</label>
+              <input type="radio" name="format" id="fmt-other" value="other"><label for="fmt-other">Something else</label>
+            </div>
+          </fieldset>
+
+          <fieldset class="roles">
+            <legend class="small">I'm joining as</legend>
+            <div class="chips">
+              <input type="radio" name="role" id="role-fan" value="fan" checked><label for="role-fan">A fan</label>
+              <input type="radio" name="role" id="role-performer" value="performer"><label for="role-performer">A performer or their team</label>
+              <input type="radio" name="role" id="role-organizer" value="organizer"><label for="role-organizer">An organiser or promoter</label>
+              <input type="radio" name="role" id="role-sponsor" value="sponsor"><label for="role-sponsor">A sponsor</label>
+              <input type="radio" name="role" id="role-provider" value="provider"><label for="role-provider">A venue or event service</label>
+            </div>
+          </fieldset>
+
+          <div class="row">
+            <div class="field">
+              <label class="small" for="email">Email, so we can tell you when it's happening</label>
+              <input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required maxlength="200">
+            </div>
+            <button class="go" id="submit" type="submit">Add my vote</button>
+          </div>
+          <div class="hp" aria-hidden="true"><label for="website">Leave empty</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+          <p class="status" id="status" role="status" aria-live="polite"></p>
+          <p class="note">No payment now. We'll only email you about this show and the HiveConcerts launch. <a href="privacy.html">How we use your details</a>.</p>
+        </form>
+      </div>
+
+      <aside class="stub" aria-label="Example of a show suggestion">
+        <p class="kind">Example suggestion</p>
+        <h2 id="stub-title">Bring <span id="stub-artist">your favourite artist</span> to <span id="stub-city">your city</span></h2>
+        <svg class="comb" id="comb" viewBox="0 0 330 64" role="img" aria-label="Demand progress: 62 percent of the target"></svg>
+        <div class="figures">
+          <div><b>1,284</b><small>fans backing</small></div>
+          <div><b>62%</b><small>of the target</small></div>
+          <div><b>23</b><small>days left</small></div>
+        </div>
+        <p class="perf">Every vote fills a cell. A full hive means the show goes to the performer's team.</p>
+      </aside>
+    </div>
+
+    <section class="band" id="how">
+      <h3 class="sec">How a show happens</h3>
+      <ol class="steps">
+        <li><h4>Propose</h4><p>Name who you want to see and the city. Fans, performers, organisers and sponsors can all propose a show. If someone already asked for it, your vote joins theirs.</p></li>
+        <li><h4>Back it</h4><p>Pledge what a ticket is worth to you. It's a promise, not a payment, so it costs nothing to show support.</p></li>
+        <li><h4>Hit the target</h4><p>Each show has a target. Share the page with friends, because every backer moves the bar.</p></li>
+        <li><h4>Book the show</h4><p>We bring the numbers to the performer's team, line up the venue and production, and you get first access to tickets.</p></li>
+      </ol>
+    </section>
+
+    <section class="band">
+      <h3 class="sec">Built for everyone who makes a show</h3>
+      <div class="who">
+        <div><h4>Performers</h4><p>Artists, bands, orchestras and theatre companies can see where their audience really is, propose their own shows, and play to rooms that already want them.</p></div>
+        <div><h4>Organisers</h4><p>Promoters can test an idea before booking anything, from a one-night concert to a touring production.</p></div>
+        <div><h4>Sponsors</h4><p>Back the shows your audience is asking for, with proof of demand before you commit a budget.</p></div>
+        <div><h4>Venues and crews</h4><p>Venues, sound, staging, security and ticketing can offer their services for shows that already have a crowd waiting.</p></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>HiveConcerts.com</span>
+    <span>Launching soon, worldwide.</span>
+    <a href="privacy.html">Privacy</a>
+  </footer>
+</div>
+
+<script>
+(function () {
+  var CELLS = 20, FILLED = Math.round(CELLS * 0.62);
+  var comb = document.getElementById('comb');
+  var ns = 'http://www.w3.org/2000/svg';
+  // Two staggered rows of hexagons, 10 per row.
+  var r = 15, w = Math.sqrt(3) * r, cells = [];
+  for (var i = 0; i < CELLS; i++) {
+    var row = i % 2, col = Math.floor(i / 2);
+    var cx = w / 2 + 2 + col * (w + 3.2) + row * ((w + 3.2) / 2);
+    var cy = r + 1 + row * (r * 1.5 + 2);
+    var pts = [];
+    for (var k = 0; k < 6; k++) { var a = Math.PI / 180 * (60 * k - 30); pts.push((cx + r * Math.cos(a)).toFixed(2) + ',' + (cy + r * Math.sin(a)).toFixed(2)); }
+    var p = document.createElementNS(ns, 'polygon');
+    p.setAttribute('points', pts.join(' '));
+    p.setAttribute('class', 'cell' + (i < FILLED ? ' on' : ''));
+    comb.appendChild(p); cells.push(p);
+  }
+
+  var artist = document.getElementById('artist'), city = document.getElementById('city');
+  var sa = document.getElementById('stub-artist'), sc = document.getElementById('stub-city');
+  function sync() {
+    sa.textContent = artist.value.trim() || 'your favourite artist';
+    sc.textContent = city.value.trim() || 'your city';
+  }
+  artist.addEventListener('input', sync); city.addEventListener('input', sync);
+
+  var form = document.getElementById('vote'), status = document.getElementById('status'), btn = document.getElementById('submit');
+  function say(msg, kind) { status.textContent = msg; status.className = 'status' + (kind ? ' ' + kind : ''); }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var data = {
+      artist: artist.value.trim(), city: city.value.trim(),
+      email: document.getElementById('email').value.trim(),
+      role: (form.querySelector('input[name=role]:checked') || {}).value || 'fan',
+      format: (form.querySelector('input[name=format]:checked') || {}).value || 'concert',
+      website: document.getElementById('website').value
+    };
+    if (!data.artist) { say('Add who or what you want to see.', 'err'); artist.focus(); return; }
+    if (!data.city) { say('Add the city you want them to play in.', 'err'); city.focus(); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) { say('Enter a valid email address so we can reach you.', 'err'); document.getElementById('email').focus(); return; }
+
+    btn.disabled = true; say('Adding your vote…');
+    fetch('/api/signup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
+      .then(function (res) {
+        if (res.ok) return res.json();
+        if (res.status === 404 || res.status === 405) throw { preview: true };
+        return res.json().then(function (j) { throw { message: j && j.error }; }, function () { throw {}; });
+      })
+      .then(function () {
+        say('Vote added for ' + data.artist + ' in ' + data.city + '. Share this page to fill the hive faster.', 'ok');
+        cells.forEach(function (c, i) { if (i < FILLED + 1) c.classList.add('on'); });
+        form.reset(); sync();
+      })
+      .catch(function (err) {
+        if (err && err.preview) say('This is a preview, so your vote was not saved. On hiveconcerts.com it will be.', 'err');
+        else say((err && err.message) || 'Your vote did not go through. Check your connection and try again.', 'err');
+      })
+      .then(function () { btn.disabled = false; });
+  });
+})();
+</script>
+</body>
+</html>

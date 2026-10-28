@@ -1,0 +1,32 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# next.js
+.next/
+out/
+next-env.d.ts
+
+# prisma generated client
+src/generated/
+
+# testing
+coverage/
+playwright-report/
+test-results/
+blob-report/
+
+# env and secrets
+.env
+.env.*
+!.env.example
+
+# cloudflare
+.wrangler/
+landing/.wrangler/
+
+# misc
+.DS_Store
+*.log
+*.tsbuildinfo
+.vercel/
