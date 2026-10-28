@@ -27,6 +27,7 @@ Needs Node 22+, pnpm 10 (`corepack enable`), and PostgreSQL 16+ (local, Docker, 
 pnpm install
 cp .env.example .env          # Windows PowerShell: Copy-Item .env.example .env   — then set DATABASE_URL
 pnpm db:init                  # first time only: creates and applies the migrations, then commit prisma/migrations/
+pnpm db:seed                  # loads regions and genres; safe to re-run
 pnpm dev                      # http://localhost:3000
 ```
 
@@ -37,7 +38,11 @@ pnpm dev                      # http://localhost:3000
 | `pnpm test:e2e` | Playwright tests on phone and desktop (first run: `pnpm exec playwright install chromium`) |
 | `pnpm format` | Format code with Prettier |
 | `pnpm db:migrate` | Create and apply a migration after changing `prisma/schema.prisma` |
+| `pnpm db:seed` | Load or refresh regions and genres from `prisma/seed/*.json` |
 | `pnpm db:studio` | Browse the database |
+| `pnpm admin:grant you@example.com` | Make an account an admin (sign in once first; `--revoke` to undo) |
+
+Signing in locally: without `RESEND_API_KEY`, the sign-in link is printed in the terminal running `pnpm dev`; open it in the browser. Google sign-in appears once `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET` are set. `pnpm test:e2e` needs a migrated, seeded database.
 
 Add UI components with `pnpm dlx shadcn@latest add <component>`.
 

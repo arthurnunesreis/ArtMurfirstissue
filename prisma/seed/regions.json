@@ -1,0 +1,167 @@
+{
+  "_note": "Placeholder set of major international cities. The launch list is an open question (docs/OPEN-QUESTIONS.md #8); edit this file and re-run `pnpm db:seed`.",
+  "regions": [
+    {
+      "slug": "london-gb",
+      "name": "London",
+      "countryCode": "GB",
+      "timezone": "Europe/London",
+      "defaultCurrency": "GBP",
+      "latitude": 51.5074,
+      "longitude": -0.1278
+    },
+    {
+      "slug": "manchester-gb",
+      "name": "Manchester",
+      "countryCode": "GB",
+      "timezone": "Europe/London",
+      "defaultCurrency": "GBP",
+      "latitude": 53.4808,
+      "longitude": -2.2426
+    },
+    {
+      "slug": "paris-fr",
+      "name": "Paris",
+      "countryCode": "FR",
+      "timezone": "Europe/Paris",
+      "defaultCurrency": "EUR",
+      "latitude": 48.8566,
+      "longitude": 2.3522
+    },
+    {
+      "slug": "berlin-de",
+      "name": "Berlin",
+      "countryCode": "DE",
+      "timezone": "Europe/Berlin",
+      "defaultCurrency": "EUR",
+      "latitude": 52.52,
+      "longitude": 13.405
+    },
+    {
+      "slug": "new-york-us",
+      "name": "New York",
+      "countryCode": "US",
+      "timezone": "America/New_York",
+      "defaultCurrency": "USD",
+      "latitude": 40.7128,
+      "longitude": -74.006
+    },
+    {
+      "slug": "atlanta-us",
+      "name": "Atlanta",
+      "countryCode": "US",
+      "timezone": "America/New_York",
+      "defaultCurrency": "USD",
+      "latitude": 33.749,
+      "longitude": -84.388
+    },
+    {
+      "slug": "los-angeles-us",
+      "name": "Los Angeles",
+      "countryCode": "US",
+      "timezone": "America/Los_Angeles",
+      "defaultCurrency": "USD",
+      "latitude": 34.0522,
+      "longitude": -118.2437
+    },
+    {
+      "slug": "toronto-ca",
+      "name": "Toronto",
+      "countryCode": "CA",
+      "timezone": "America/Toronto",
+      "defaultCurrency": "CAD",
+      "latitude": 43.6532,
+      "longitude": -79.3832
+    },
+    {
+      "slug": "sao-paulo-br",
+      "name": "São Paulo",
+      "countryCode": "BR",
+      "timezone": "America/Sao_Paulo",
+      "defaultCurrency": "BRL",
+      "latitude": -23.5505,
+      "longitude": -46.6333
+    },
+    {
+      "slug": "johannesburg-za",
+      "name": "Johannesburg",
+      "countryCode": "ZA",
+      "timezone": "Africa/Johannesburg",
+      "defaultCurrency": "ZAR",
+      "latitude": -26.2041,
+      "longitude": 28.0473
+    },
+    {
+      "slug": "cape-town-za",
+      "name": "Cape Town",
+      "countryCode": "ZA",
+      "timezone": "Africa/Johannesburg",
+      "defaultCurrency": "ZAR",
+      "latitude": -33.9249,
+      "longitude": 18.4241
+    },
+    {
+      "slug": "lagos-ng",
+      "name": "Lagos",
+      "countryCode": "NG",
+      "timezone": "Africa/Lagos",
+      "defaultCurrency": "NGN",
+      "latitude": 6.5244,
+      "longitude": 3.3792
+    },
+    {
+      "slug": "accra-gh",
+      "name": "Accra",
+      "countryCode": "GH",
+      "timezone": "Africa/Accra",
+      "defaultCurrency": "GHS",
+      "latitude": 5.6037,
+      "longitude": -0.187
+    },
+    {
+      "slug": "nairobi-ke",
+      "name": "Nairobi",
+      "countryCode": "KE",
+      "timezone": "Africa/Nairobi",
+      "defaultCurrency": "KES",
+      "latitude": -1.2921,
+      "longitude": 36.8219
+    },
+    {
+      "slug": "dubai-ae",
+      "name": "Dubai",
+      "countryCode": "AE",
+      "timezone": "Asia/Dubai",
+      "defaultCurrency": "AED",
+      "latitude": 25.2048,
+      "longitude": 55.2708
+    },
+    {
+      "slug": "mumbai-in",
+      "name": "Mumbai",
+      "countryCode": "IN",
+      "timezone": "Asia/Kolkata",
+      "defaultCurrency": "INR",
+      "latitude": 19.076,
+      "longitude": 72.8777
+    },
+    {
+      "slug": "tokyo-jp",
+      "name": "Tokyo",
+      "countryCode": "JP",
+      "timezone": "Asia/Tokyo",
+      "defaultCurrency": "JPY",
+      "latitude": 35.6762,
+      "longitude": 139.6503
+    },
+    {
+      "slug": "sydney-au",
+      "name": "Sydney",
+      "countryCode": "AU",
+      "timezone": "Australia/Sydney",
+      "defaultCurrency": "AUD",
+      "latitude": -33.8688,
+      "longitude": 151.2093
+    }
+  ]
+}

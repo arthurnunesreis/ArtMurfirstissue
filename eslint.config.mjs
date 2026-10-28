@@ -12,6 +12,26 @@ const compat = new FlatCompat({
 const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
+    // CLAUDE.md principle 8: permission checks go through can() in src/lib/access only.
+    files: ["src/**/*.{ts,tsx}"],
+    ignores: ["src/lib/access/**", "src/generated/**"],
+    rules: {
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector: "MemberExpression[object.name='Role'][property.name=/^(ADMIN|USER)$/]",
+          message: "Check permissions with can()/decide() from @/lib/access, not Role values.",
+        },
+        {
+          selector:
+            "BinaryExpression[operator=/^[!=]==?$/] > MemberExpression.left[property.name='role']",
+          message:
+            "Check permissions with can()/decide() from @/lib/access, not .role comparisons.",
+        },
+      ],
+    },
+  },
+  {
     ignores: [
       "node_modules/**",
       ".next/**",

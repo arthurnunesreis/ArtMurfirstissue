@@ -20,7 +20,7 @@ Work in order. Each task: meet every acceptance criterion, add tests, tick the b
 
 **Done when:** `pnpm dev` serves a placeholder home page; `pnpm test`, `pnpm typecheck`, `pnpm lint` pass; CI is green.
 
-### - [ ] 2. Money, regions and genres
+### - [x] 2. Money, regions and genres
 - `src/lib/money.ts`: `toMinor`, `fromMinor`, `formatMoney(amountMinor, currency, locale)`, `convertForDisplay`. Handle zero-decimal (JPY) and three-decimal (KWD) currencies via `Intl.NumberFormat` resolved options.
 - `src/lib/fx.ts` + cron route `/api/cron/fx` that refreshes `FxRate` daily from a free rates API (URL in env). Protected by `CRON_SECRET`.
 - Seed Regions from `prisma/seed/regions.json` (country code, IANA time zone, default currency). Start with a small placeholder set of major international cities; the launch list is an open question. No market is privileged in code.
@@ -28,7 +28,7 @@ Work in order. Each task: meet every acceptance criterion, add tests, tick the b
 
 **Done when:** unit tests cover formatting/rounding for USD, ZAR, GBP, JPY, KWD; both seeds run idempotently.
 
-### - [ ] 3. Auth and roles
+### - [x] 3. Auth and roles
 - Auth.js v5 with Prisma adapter: email magic link (Resend) + Google.
 - Onboarding after first sign-in: name, home Region (searchable), preferred display currency (defaults from region), and "I'm here as…" (multi-select `stakeholderRoles`: fan, performer or management, organiser, sponsor, venue or event service). Fan is pre-selected.
 - Route groups: `(public)`, `(fan)` under `/me`, `(hub)` under `/hub/[org]` (a "portals coming soon" page with a waitlist for users whose roles include a stakeholder type), `(admin)` under `/admin`. See USERS-AND-ACCESS.md §2 and §5.

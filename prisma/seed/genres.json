@@ -1,0 +1,308 @@
+{
+  "genres": [
+    {
+      "slug": "pop",
+      "name": "Pop",
+      "format": "CONCERT"
+    },
+    {
+      "slug": "hip-hop",
+      "name": "Hip hop",
+      "format": "CONCERT"
+    },
+    {
+      "slug": "rnb",
+      "name": "R&B and soul",
+      "format": "CONCERT"
+    },
+    {
+      "slug": "rock",
+      "name": "Rock",
+      "format": "CONCERT"
+    },
+    {
+      "slug": "jazz",
+      "name": "Jazz",
+      "format": "CONCERT"
+    },
+    {
+      "slug": "gospel",
+      "name": "Gospel",
+      "format": "CONCERT"
+    },
+    {
+      "slug": "afrobeats",
+      "name": "Afrobeats",
+      "format": "CONCERT"
+    },
+    {
+      "slug": "amapiano",
+      "name": "Amapiano",
+      "format": "CONCERT"
+    },
+    {
+      "slug": "reggae-dancehall",
+      "name": "Reggae and dancehall",
+      "format": "CONCERT"
+    },
+    {
+      "slug": "latin",
+      "name": "Latin",
+      "format": "CONCERT"
+    },
+    {
+      "slug": "k-pop",
+      "name": "K-pop",
+      "format": "CONCERT"
+    },
+    {
+      "slug": "country",
+      "name": "Country",
+      "format": "CONCERT"
+    },
+    {
+      "slug": "electronic",
+      "name": "Electronic",
+      "format": "CONCERT"
+    },
+    {
+      "slug": "folk-traditional",
+      "name": "Folk and traditional",
+      "format": "CONCERT"
+    },
+    {
+      "slug": "classical-crossover",
+      "name": "Classical crossover",
+      "format": "CONCERT"
+    },
+    {
+      "slug": "blues",
+      "name": "Blues",
+      "format": "CONCERT"
+    },
+    {
+      "slug": "metal",
+      "name": "Metal",
+      "format": "CONCERT"
+    },
+    {
+      "slug": "world",
+      "name": "World music",
+      "format": "CONCERT"
+    },
+    {
+      "slug": "afro-jazz",
+      "name": "Afro-jazz",
+      "format": "CONCERT",
+      "parent": "jazz"
+    },
+    {
+      "slug": "smooth-jazz",
+      "name": "Smooth jazz",
+      "format": "CONCERT",
+      "parent": "jazz"
+    },
+    {
+      "slug": "house",
+      "name": "House",
+      "format": "CONCERT",
+      "parent": "electronic"
+    },
+    {
+      "slug": "techno",
+      "name": "Techno",
+      "format": "CONCERT",
+      "parent": "electronic"
+    },
+    {
+      "slug": "drum-and-bass",
+      "name": "Drum and bass",
+      "format": "CONCERT",
+      "parent": "electronic"
+    },
+    {
+      "slug": "trap",
+      "name": "Trap",
+      "format": "CONCERT",
+      "parent": "hip-hop"
+    },
+    {
+      "slug": "drill",
+      "name": "Drill",
+      "format": "CONCERT",
+      "parent": "hip-hop"
+    },
+    {
+      "slug": "indie-rock",
+      "name": "Indie rock",
+      "format": "CONCERT",
+      "parent": "rock"
+    },
+    {
+      "slug": "punk",
+      "name": "Punk",
+      "format": "CONCERT",
+      "parent": "rock"
+    },
+    {
+      "slug": "neo-soul",
+      "name": "Neo soul",
+      "format": "CONCERT",
+      "parent": "rnb"
+    },
+    {
+      "slug": "highlife",
+      "name": "Highlife",
+      "format": "CONCERT",
+      "parent": "afrobeats"
+    },
+    {
+      "slug": "afro-fusion",
+      "name": "Afro-fusion",
+      "format": "CONCERT",
+      "parent": "afrobeats"
+    },
+    {
+      "slug": "reggaeton",
+      "name": "Reggaeton",
+      "format": "CONCERT",
+      "parent": "latin"
+    },
+    {
+      "slug": "salsa",
+      "name": "Salsa",
+      "format": "CONCERT",
+      "parent": "latin"
+    },
+    {
+      "slug": "kizomba",
+      "name": "Kizomba",
+      "format": "CONCERT",
+      "parent": "world"
+    },
+    {
+      "slug": "contemporary-gospel",
+      "name": "Contemporary gospel",
+      "format": "CONCERT",
+      "parent": "gospel"
+    },
+    {
+      "slug": "choral-gospel",
+      "name": "Choral gospel",
+      "format": "CONCERT",
+      "parent": "gospel"
+    },
+    {
+      "slug": "symphonic",
+      "name": "Symphonic",
+      "format": "ORCHESTRAL"
+    },
+    {
+      "slug": "chamber",
+      "name": "Chamber music",
+      "format": "ORCHESTRAL"
+    },
+    {
+      "slug": "film-game-scores",
+      "name": "Film and game scores",
+      "format": "ORCHESTRAL"
+    },
+    {
+      "slug": "opera-in-concert",
+      "name": "Opera in concert",
+      "format": "ORCHESTRAL"
+    },
+    {
+      "slug": "choral",
+      "name": "Choral",
+      "format": "ORCHESTRAL"
+    },
+    {
+      "slug": "baroque",
+      "name": "Baroque and early music",
+      "format": "ORCHESTRAL"
+    },
+    {
+      "slug": "contemporary-classical",
+      "name": "Contemporary classical",
+      "format": "ORCHESTRAL"
+    },
+    {
+      "slug": "pops-orchestra",
+      "name": "Pops and crossover orchestra",
+      "format": "ORCHESTRAL",
+      "parent": "symphonic"
+    },
+    {
+      "slug": "string-quartet",
+      "name": "String quartet",
+      "format": "ORCHESTRAL",
+      "parent": "chamber"
+    },
+    {
+      "slug": "anime-scores",
+      "name": "Anime scores",
+      "format": "ORCHESTRAL",
+      "parent": "film-game-scores"
+    },
+    {
+      "slug": "musical",
+      "name": "Musical theatre",
+      "format": "THEATRE"
+    },
+    {
+      "slug": "drama",
+      "name": "Drama",
+      "format": "THEATRE"
+    },
+    {
+      "slug": "comedy-theatre",
+      "name": "Comedy",
+      "format": "THEATRE"
+    },
+    {
+      "slug": "opera",
+      "name": "Opera",
+      "format": "THEATRE"
+    },
+    {
+      "slug": "childrens-theatre",
+      "name": "Children's theatre",
+      "format": "THEATRE"
+    },
+    {
+      "slug": "spoken-word",
+      "name": "Spoken word and poetry",
+      "format": "THEATRE"
+    },
+    {
+      "slug": "physical-theatre",
+      "name": "Physical theatre",
+      "format": "THEATRE"
+    },
+    {
+      "slug": "jukebox-musical",
+      "name": "Jukebox musical",
+      "format": "THEATRE",
+      "parent": "musical"
+    },
+    {
+      "slug": "classic-drama",
+      "name": "Classics",
+      "format": "THEATRE",
+      "parent": "drama"
+    },
+    {
+      "slug": "new-writing",
+      "name": "New writing",
+      "format": "THEATRE",
+      "parent": "drama"
+    },
+    {
+      "slug": "pantomime",
+      "name": "Pantomime",
+      "format": "THEATRE",
+      "parent": "childrens-theatre"
+    }
+  ]
+}

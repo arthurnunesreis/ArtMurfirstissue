@@ -21,7 +21,16 @@ export default defineConfig({
     { name: "desktop", use: { ...devices["Desktop Chrome"] } },
   ],
   webServer: {
+    // AUTH_TEST_MODE captures sign-in links for e2e/auth.spec.ts instead of emailing them.
     command: `pnpm dev --port ${PORT}`,
+    env: {
+      ...(Object.fromEntries(
+        Object.entries(process.env).filter(([, v]) => v !== undefined),
+      ) as Record<string, string>),
+      AUTH_TEST_MODE: "1",
+      AUTH_URL: `http://localhost:${PORT}`,
+      RESEND_API_KEY: "",
+    },
     url: `http://localhost:${PORT}`,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
